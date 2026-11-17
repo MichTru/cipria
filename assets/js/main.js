@@ -90,6 +90,7 @@ const menuBtn = $('[data-menu-toggle]');
 menuBtn.addEventListener('click', () => {
   const open = root.classList.toggle('menu-open');
   menuBtn.setAttribute('aria-expanded', open);
+  menuBtn.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
 });
 $$('.main-nav a').forEach(a => a.addEventListener('click', () => {
   root.classList.remove('menu-open');
@@ -99,23 +100,15 @@ $$('.main-nav a').forEach(a => a.addEventListener('click', () => {
 /* ---------- Hero: bagliore e parallasse leggera ---------- */
 const hero = $('[data-hero]');
 const heroMedia = $('[data-hero-media]');
-const glow = $('[data-glow]');
-let gTarget = { x: vw * .7, y: vh * .4 }, gPos = { ...gTarget };
-if (finePointer) hero.addEventListener('pointermove', e => { gTarget = { x: e.clientX, y: e.clientY }; }, { passive: true });
 function renderHero() {
   if (scrollY < vh * 1.2) heroMedia.style.setProperty('--py', `${scrollY * .25}px`);
-  if (!finePointer) return;
-  gPos.x = lerp(gPos.x, gTarget.x, .07);
-  gPos.y = lerp(gPos.y, gTarget.y, .07);
-  glow.style.setProperty('--gx', `${gPos.x}px`);
-  glow.style.setProperty('--gy', `${gPos.y}px`);
 }
 
 /* ---------- Testo in movimento ---------- */
 const marquees = $$('[data-marquee]').map(row => {
   const span = row.firstElementChild;
   for (let n = 0; n < 3; n++) row.append(span.cloneNode(true));
-  return { row, dir: Number(row.dataset.marquee), x: 0, w: span.offsetWidth, visible: false };
+  return { row, dir: Number(row.dataset.marquee), x: 0, v: 0, w: span.offsetWidth, visible: false };
 });
 const mio = new IntersectionObserver(es => es.forEach(e => { const m = marquees.find(q => q.row === e.target); if (m) m.visible = e.isIntersecting; }));
 marquees.forEach(m => mio.observe(m.row));
@@ -125,7 +118,8 @@ function renderMarquee(dy) {
   marquees.forEach(m => {
     if (!m.visible) return;
     const dir = m.dir * (velocity < -0.5 ? -1 : 1);
-    m.x -= (0.6 + Math.min(Math.abs(velocity), 60) * .3) * dir;
+    m.v = lerp(m.v, (0.6 + Math.min(Math.abs(velocity), 60) * .3) * dir, .08);
+    m.x -= m.v;
     if (m.x <= -m.w) m.x += m.w;
     if (m.x > 0) m.x -= m.w;
     m.row.style.transform = `translate3d(${m.x}px,0,0)`;
@@ -217,21 +211,29 @@ new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) { sho
 /* ---------- Barra mobile ---------- */
 const mbar = $('[data-mbar]');
 const footer = $('.site-footer');
+let footerVisibile = false;
+new IntersectionObserver(([e]) => { footerVisibile = e.isIntersecting; }).observe(footer);
+let mbarOn = false;
 function renderMbar() {
-  const nearEnd = footer.getBoundingClientRect().top < vh;
-  mbar.classList.toggle('on', scrollY > vh * .8 && !nearEnd);
+  const on = scrollY > vh * .8 && !footerVisibile;
+  if (on !== mbarOn) { mbarOn = on; mbar.classList.toggle('on', on); }
 }
 
 /* ---------- Vetrina trascinabile con inclinazione ---------- */
 const track = $('[data-track]');
-let skew = 0, lastLeft = 0;
+let skew = 0, lastLeft = 0, skewTarget = 0, skewAttivo = false;
+track.addEventListener('scroll', () => {
+  const left = track.scrollLeft;
+  skewTarget = clamp(-(left - lastLeft) * .2, -4, 4);
+  lastLeft = left;
+  if (!skewAttivo && !reduced) { skewAttivo = true; requestAnimationFrame(renderTrackSkew); }
+}, { passive: true });
 function renderTrackSkew() {
-  const delta = track.scrollLeft - lastLeft;
-  lastLeft = track.scrollLeft;
-  skew = lerp(skew, clamp(-delta * .25, -7, 7), .12);
-  if (Math.abs(skew) < .01) skew = 0;
+  skew = lerp(skew, skewTarget, .15);
+  skewTarget *= .85;
+  if (Math.abs(skew) < .02 && Math.abs(skewTarget) < .02) { skew = 0; skewAttivo = false; }
   track.style.setProperty('--skew', `${skew.toFixed(2)}deg`);
-  $$('.card', track).forEach(c => c.style.setProperty('--skew', `${skew.toFixed(2)}deg`));
+  if (skewAttivo) requestAnimationFrame(renderTrackSkew);
 }
 if (finePointer) {
   let down = false, startX = 0, startLeft = 0, lastX = 0, v = 0, moved = false;
@@ -263,20 +265,8 @@ const step = () => (track.firstElementChild?.getBoundingClientRect().width || 30
 $('[data-track-prev]').addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
 $('[data-track-next]').addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
 
-/* ---------- Cursore e pulsanti magnetici ---------- */
-const cursor = $('[data-cursor]');
-const cursorLabel = $('[data-cursor-label]');
-let cTarget = { x: -100, y: -100 }, cPos = { ...cTarget };
+/* ---------- Pulsanti magnetici ---------- */
 if (finePointer && !reduced) {
-  addEventListener('pointermove', e => { cTarget = { x: e.clientX, y: e.clientY }; cursor.classList.add('on'); }, { passive: true });
-  document.addEventListener('pointerleave', () => cursor.classList.remove('on'));
-  document.addEventListener('pointerover', e => {
-    const withText = e.target.closest('[data-cursor-text]');
-    const link = e.target.closest('a, button, select, input, .hotspot');
-    cursor.classList.toggle('text', !!withText);
-    cursor.classList.toggle('link', !withText && !!link);
-    cursorLabel.textContent = withText ? withText.dataset.cursorText : '';
-  });
   document.addEventListener('pointermove', e => {
     const m = e.target.closest('.magnetic');
     $$('.magnetic').forEach(b => { if (b !== m) b.style.transform = ''; });
@@ -287,29 +277,24 @@ if (finePointer && !reduced) {
     m.style.transform = `translate(${dx * .25}px, ${dy * .35}px)`;
   });
 }
-function renderCursor() {
-  cPos.x = lerp(cPos.x, cTarget.x, .2);
-  cPos.y = lerp(cPos.y, cTarget.y, .2);
-  cursor.style.transform = `translate3d(${cPos.x}px,${cPos.y}px,0)`;
-}
 
 /* ---------- Ciclo unico di animazione ---------- */
-let prevY = scrollY, running = true;
+let prevY = scrollY, running = true, headerSolid = false, headerAway = false;
 function frameLoop() {
   if (!running) return;
   const y = scrollY;
   const dy = y - prevY;
   prevY = y;
-  header.classList.toggle('solid', y > 40);
+  const solid = y > 40;
+  if (solid !== headerSolid) { headerSolid = solid; header.classList.toggle('solid', solid); }
   if (Math.abs(y - lastY) > 6) {
-    header.classList.toggle('away', y > lastY && y > vh && !root.classList.contains('menu-open'));
+    const away = y > lastY && y > vh && !root.classList.contains('menu-open');
+    if (away !== headerAway) { headerAway = away; header.classList.toggle('away', away); }
     lastY = y;
   }
   renderHero();
   renderMarquee(dy);
-  renderTrackSkew();
   renderMbar();
-  if (finePointer) renderCursor();
   requestAnimationFrame(frameLoop);
 }
 document.addEventListener('visibilitychange', () => {
@@ -344,7 +329,7 @@ const scrim = $('[data-scrim]');
 let lastFocus = null;
 function openCart() {
   lastFocus = document.activeElement;
-  scrim.hidden = false;
+  scrim.classList.add('on');
   drawer.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
   $('[data-close-cart]').focus();
@@ -352,7 +337,7 @@ function openCart() {
 function closeCart() {
   drawer.classList.remove('open');
   drawer.setAttribute('aria-hidden', 'true');
-  scrim.hidden = true;
+  scrim.classList.remove('on');
   lastFocus?.focus();
 }
 $$('[data-open-cart]').forEach(b => b.addEventListener('click', openCart));
@@ -361,7 +346,10 @@ scrim.addEventListener('click', closeCart);
 addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeCart(); });
 
 const linesEl = $('[data-cart-lines]');
+let contoPrima = cart.count;
 cart.subscribe(c => {
+  if (c.count > contoPrima) $$('[data-open-cart]').forEach(b => { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); });
+  contoPrima = c.count;
   $('[data-cart-dot]').hidden = c.count === 0;
   $('[data-cart-empty]').hidden = c.count > 0;
   $('[data-cart-foot]').hidden = c.count === 0;
@@ -498,6 +486,18 @@ getProducts().then(products => {
   renderLook(products);
 }).catch(err => console.error('Catalogo non disponibile', err));
 
+/* ---------- Finestre: chiusura con dissolvenza ---------- */
+function chiudi(d) {
+  if (!d.open || d.classList.contains('closing')) return;
+  if (reduced) { d.close(); return; }
+  d.classList.add('closing');
+  d.addEventListener('animationend', () => { d.classList.remove('closing'); d.close(); }, { once: true });
+}
+function chiusuraMorbida(d) {
+  d.addEventListener('cancel', e => { e.preventDefault(); chiudi(d); });
+  d.addEventListener('click', e => { if (e.target === d) chiudi(d); });
+}
+
 /* ---------- Scheda prodotto ---------- */
 const pdp = $('[data-pdp]');
 const pdpMain = $('[data-pdp-main]');
@@ -589,12 +589,12 @@ function updateTry() {
 pdpAdd.addEventListener('click', () => {
   if (!pdpVariant) return;
   cart.add(pdpProduct, pdpVariant);
-  pdp.close();
+  chiudi(pdp);
   openCart();
 });
 pdpFav.addEventListener('click', () => pdpFav.setAttribute('aria-pressed', armadio.toggle(pdpProduct.id)));
-$('[data-pdp-close]').addEventListener('click', () => pdp.close());
-pdp.addEventListener('click', e => { if (e.target === pdp) pdp.close(); });
+$('[data-pdp-close]').addEventListener('click', () => chiudi(pdp));
+chiusuraMorbida(pdp);
 pdp.addEventListener('close', () => document.body.classList.remove('locked'));
 // zoom con il mouse
 if (finePointer) {
@@ -621,8 +621,8 @@ $$('[data-open-booking]').forEach(b => b.addEventListener('click', () => {
   submitBtn.hidden = false;
   booking.showModal();
 }));
-$('[data-close-booking]').addEventListener('click', () => booking.close());
-booking.addEventListener('click', e => { if (e.target === booking) booking.close(); });
+$('[data-close-booking]').addEventListener('click', () => chiudi(booking));
+chiusuraMorbida(booking);
 bookingForm.addEventListener('submit', e => {
   e.preventDefault();
   if (!bookingForm.reportValidity()) return;
