@@ -132,6 +132,36 @@ function renderMarquee(dy) {
   });
 }
 
+/* ---------- Tre mondi: pannelli che si alternano ---------- */
+const mondiSec = $('[data-mondi]');
+const mondi = $$('[data-mondo]', mondiSec);
+const MONDI_DUR = 4800;
+let mondoAtt = 0, mondiTimer = null, mondiVisti = false;
+mondiSec.style.setProperty('--dur', `${MONDI_DUR}ms`);
+function apriMondo(i) {
+  mondoAtt = i;
+  mondi.forEach((m, n) => {
+    const on = n === i;
+    m.classList.toggle('on', on);
+    $('.mondo-toggle', m).setAttribute('aria-expanded', on);
+    const bar = $('.mondo-progress i', m);
+    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+  });
+}
+function prossimoMondo() {
+  clearTimeout(mondiTimer);
+  if (!mondiVisti || reduced || mondiSec.classList.contains('paused')) return;
+  mondiTimer = setTimeout(() => { apriMondo((mondoAtt + 1) % mondi.length); prossimoMondo(); }, MONDI_DUR);
+}
+mondi.forEach((m, n) => {
+  $('.mondo-toggle', m).addEventListener('click', () => { apriMondo(n); prossimoMondo(); });
+  if (finePointer) m.addEventListener('pointerenter', () => { if (n !== mondoAtt) apriMondo(n); });
+});
+const panels = $('.mondi-panels', mondiSec);
+panels.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { mondiSec.classList.add('paused'); clearTimeout(mondiTimer); } });
+panels.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { mondiSec.classList.remove('paused'); apriMondo(mondoAtt); prossimoMondo(); } });
+new IntersectionObserver(([e]) => { mondiVisti = e.isIntersecting; if (mondiVisti) { apriMondo(mondoAtt); prossimoMondo(); } else clearTimeout(mondiTimer); }, { threshold: .3 }).observe(panels);
+
 /* ---------- Sposa: abiti in dissolvenza automatica ---------- */
 const sposa = $('[data-sposa]');
 const slides = $$('.abito-slide', sposa);

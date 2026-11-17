@@ -131,29 +131,51 @@
     </div>
   </section>
 
-  <!-- Tre mondi -->
-  <section class="mondi" id="mondi">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <p class="label">Le collezioni</p>
-          <h2 data-split>Tre mondi, <em>un solo stile</em></h2>
-        </div>
+  <!-- Tre mondi: pannelli che si aprono -->
+  <section class="mondi" id="mondi" data-mondi>
+    <div class="wrap section-head">
+      <div>
+        <p class="label">Le collezioni</p>
+        <h2 data-split>Tre mondi, <em>un solo stile</em></h2>
       </div>
     </div>
-    <div class="mondi-grid">
-      <a class="mondo" href="#vetrina" data-cursor-text="Scopri" data-reveal>
-        <div class="mondo-img ph" style="--tinta:#CDB9A5"><img src="assets/img/reparti/donna.jpg" srcset="assets/img/reparti/donna-800.jpg 800w, assets/img/reparti/donna.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione donna Cipria" loading="lazy" decoding="async"></div>
-        <div class="mondo-cap"><h3>Donna</h3><p>Sartoriale, pelle, raso.</p></div>
-      </a>
-      <a class="mondo" href="#vetrina" data-cursor-text="Scopri" data-reveal style="--d:120ms">
-        <div class="mondo-img ph" style="--tinta:#D8C6A6"><img src="assets/img/reparti/cerimonia.jpg" srcset="assets/img/reparti/cerimonia-800.jpg 800w, assets/img/reparti/cerimonia.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione cerimonia Cipria" loading="lazy" decoding="async"></div>
-        <div class="mondo-cap"><h3>Cerimonia</h3><p>Per invitate, testimoni e mamme.</p></div>
-      </a>
-      <a class="mondo" href="#sposa" data-cursor-text="Scopri" data-reveal style="--d:240ms">
-        <div class="mondo-img ph" style="--tinta:#EAD9CF"><img src="assets/img/reparti/sposa.jpg" srcset="assets/img/reparti/sposa-800.jpg 800w, assets/img/reparti/sposa.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione sposa Cipria" loading="lazy" decoding="async"></div>
-        <div class="mondo-cap"><h3><em>Sposa</em></h3><p>Prova su appuntamento.</p></div>
-      </a>
+    <div class="mondi-panels">
+      <article class="mondo on" data-mondo style="--tinta:#CDB9A5">
+        <img class="mondo-bg" src="assets/img/reparti/donna.jpg" srcset="assets/img/reparti/donna-800.jpg 800w, assets/img/reparti/donna.jpg 1600w" sizes="(max-width: 900px) 100vw, 60vw" width="1600" height="2000" alt="" loading="lazy" decoding="async">
+        <span class="mondo-progress" aria-hidden="true"><i></i></span>
+        <button class="mondo-toggle" type="button" aria-expanded="true" aria-controls="mondo-donna">
+          <span class="mondo-vert">Donna</span>
+        </button>
+        <div class="mondo-body" id="mondo-donna">
+          <h3>Donna</h3>
+          <p>Sartoriale, pelle e raso: capi da vivere ogni giorno e da ricordare la sera.</p>
+          <a class="btn btn-light magnetic" href="#vetrina">Scopri la collezione</a>
+        </div>
+      </article>
+      <article class="mondo" data-mondo style="--tinta:#D8C6A6">
+        <img class="mondo-bg" src="assets/img/reparti/cerimonia.jpg" srcset="assets/img/reparti/cerimonia-800.jpg 800w, assets/img/reparti/cerimonia.jpg 1600w" sizes="(max-width: 900px) 100vw, 60vw" width="1600" height="2000" alt="" loading="lazy" decoding="async">
+        <span class="mondo-progress" aria-hidden="true"><i></i></span>
+        <button class="mondo-toggle" type="button" aria-expanded="false" aria-controls="mondo-cerimonia">
+          <span class="mondo-vert">Cerimonia</span>
+        </button>
+        <div class="mondo-body" id="mondo-cerimonia">
+          <h3>Cerimonia</h3>
+          <p>Abiti lunghi e completi per invitate, testimoni e mamme degli sposi.</p>
+          <a class="btn btn-light magnetic" href="#vetrina">Scopri la collezione</a>
+        </div>
+      </article>
+      <article class="mondo" data-mondo style="--tinta:#EAD9CF">
+        <img class="mondo-bg" src="assets/img/reparti/sposa.jpg" srcset="assets/img/reparti/sposa-800.jpg 800w, assets/img/reparti/sposa.jpg 1600w" sizes="(max-width: 900px) 100vw, 60vw" width="1600" height="2000" alt="" loading="lazy" decoding="async">
+        <span class="mondo-progress" aria-hidden="true"><i></i></span>
+        <button class="mondo-toggle" type="button" aria-expanded="false" aria-controls="mondo-sposa">
+          <span class="mondo-vert"><em>Sposa</em></span>
+        </button>
+        <div class="mondo-body" id="mondo-sposa">
+          <h3><em>Sposa</em></h3>
+          <p>Una selezione esclusiva di abiti, da provare con calma su appuntamento.</p>
+          <a class="btn btn-light magnetic" href="#sposa">Scopri gli abiti</a>
+        </div>
+      </article>
     </div>
   </section>
 
