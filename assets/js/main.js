@@ -12,12 +12,21 @@ const easeInOut = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 const waLink = text => `https://wa.me/${BOUTIQUE.whatsapp}?text=${encodeURIComponent(text)}`;
 let vw = innerWidth, vh = innerHeight;
 
+/* ---------- Ogni apertura parte dalla hero ---------- */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+const toTop = () => scrollTo({ top: 0, left: 0, behavior: 'instant' });
+toTop();
+addEventListener('pageshow', toTop);
+
 /* ---------- Intro: volo di camera 3D ---------- */
 const intro = $('[data-intro]');
 let started = false;
 const start = () => {
   if (started) return;
   started = true;
+  toTop();
+  document.body.classList.remove('locked');
   intro?.classList.add('out');
   setTimeout(() => root.classList.add('ready'), 350);
   setTimeout(() => intro?.remove(), 1300);
@@ -25,6 +34,7 @@ const start = () => {
 if (reduced || !intro) {
   start();
 } else {
+  document.body.classList.add('locked');
   const stage = $('[data-intro-stage]');
   stage.addEventListener('animationend', () => setTimeout(start, 350), { once: true });
   $('[data-intro-skip]').addEventListener('click', start);
