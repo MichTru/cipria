@@ -1,12 +1,221 @@
 {
   "products": [
-    {"id": "demo-1", "handle": "giacca-pelle-intrecciata", "title": "Giacca in pelle intrecciata", "productType": "Donna", "tags": ["donna", "look-autunno"], "price": 389, "currency": "EUR", "tinta": "#B9A28D", "variants": [{"id": "demo-1-s", "title": "S", "available": true}, {"id": "demo-1-m", "title": "M", "available": true}, {"id": "demo-1-l", "title": "L", "available": false}]},
-    {"id": "demo-2", "handle": "top-raso-pizzo", "title": "Top in raso con pizzo", "productType": "Donna", "tags": ["donna", "look-sera"], "price": 129, "currency": "EUR", "tinta": "#E3D2C6", "variants": [{"id": "demo-2-s", "title": "S", "available": true}, {"id": "demo-2-m", "title": "M", "available": true}]},
-    {"id": "demo-3", "handle": "gonna-raso", "title": "Gonna midi in raso", "productType": "Donna", "tags": ["donna", "look-sera"], "price": 149, "currency": "EUR", "tinta": "#CDB9A5", "variants": [{"id": "demo-3-s", "title": "S", "available": true}, {"id": "demo-3-m", "title": "M", "available": true}, {"id": "demo-3-l", "title": "L", "available": true}]},
-    {"id": "demo-4", "handle": "giacca-sartoriale", "title": "Giacca sartoriale", "productType": "Donna", "tags": ["donna", "look-sera"], "price": 259, "currency": "EUR", "tinta": "#D8C6A6", "variants": [{"id": "demo-4-40", "title": "40", "available": true}, {"id": "demo-4-42", "title": "42", "available": true}, {"id": "demo-4-44", "title": "44", "available": true}]},
-    {"id": "demo-5", "handle": "abito-lungo-paillettes", "title": "Abito lungo in paillettes", "productType": "Cerimonia", "tags": ["cerimonia"], "price": 449, "currency": "EUR", "tinta": "#E9DDD3", "variants": [{"id": "demo-5-40", "title": "40", "available": true}, {"id": "demo-5-42", "title": "42", "available": true}]},
-    {"id": "demo-6", "handle": "abito-raso-drappeggiato", "title": "Abito in raso drappeggiato", "productType": "Cerimonia", "tags": ["cerimonia"], "price": 399, "currency": "EUR", "tinta": "#C4B09B", "variants": [{"id": "demo-6-40", "title": "40", "available": true}, {"id": "demo-6-42", "title": "42", "available": true}, {"id": "demo-6-44", "title": "44", "available": true}]},
-    {"id": "demo-7", "handle": "borsa-pelle-foulard", "title": "Borsa in pelle con foulard", "productType": "Donna", "tags": ["donna", "accessori", "look-sera"], "price": 219, "currency": "EUR", "tinta": "#A99482", "variants": [{"id": "demo-7-u", "title": "Unica", "available": true}]},
-    {"id": "demo-8", "handle": "stola-pelliccia-ecologica", "title": "Stola in pelliccia ecologica", "productType": "Cerimonia", "tags": ["cerimonia", "accessori"], "price": 179, "currency": "EUR", "tinta": "#F1E7DE", "variants": [{"id": "demo-8-u", "title": "Unica", "available": true}]}
+    {
+      "id": "demo-1",
+      "handle": "giacca-pelle-intrecciata",
+      "title": "Giacca in pelle intrecciata",
+      "productType": "Donna",
+      "tags": [
+        "donna",
+        "look-autunno"
+      ],
+      "price": 389,
+      "currency": "EUR",
+      "tinta": "#B9A28D",
+      "variants": [
+        {
+          "id": "demo-1-s",
+          "title": "S",
+          "available": true
+        },
+        {
+          "id": "demo-1-m",
+          "title": "M",
+          "available": true
+        },
+        {
+          "id": "demo-1-l",
+          "title": "L",
+          "available": false
+        }
+      ],
+      "image": "assets/img/prodotti/giacca-pelle-intrecciata.jpg"
+    },
+    {
+      "id": "demo-2",
+      "handle": "top-raso-pizzo",
+      "title": "Top in raso con pizzo",
+      "productType": "Donna",
+      "tags": [
+        "donna",
+        "look-sera"
+      ],
+      "price": 129,
+      "currency": "EUR",
+      "tinta": "#E3D2C6",
+      "variants": [
+        {
+          "id": "demo-2-s",
+          "title": "S",
+          "available": true
+        },
+        {
+          "id": "demo-2-m",
+          "title": "M",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/top-raso-pizzo.jpg"
+    },
+    {
+      "id": "demo-3",
+      "handle": "gonna-raso",
+      "title": "Gonna midi in raso",
+      "productType": "Donna",
+      "tags": [
+        "donna",
+        "look-sera"
+      ],
+      "price": 149,
+      "currency": "EUR",
+      "tinta": "#CDB9A5",
+      "variants": [
+        {
+          "id": "demo-3-s",
+          "title": "S",
+          "available": true
+        },
+        {
+          "id": "demo-3-m",
+          "title": "M",
+          "available": true
+        },
+        {
+          "id": "demo-3-l",
+          "title": "L",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/gonna-raso.jpg"
+    },
+    {
+      "id": "demo-4",
+      "handle": "giacca-sartoriale",
+      "title": "Giacca sartoriale",
+      "productType": "Donna",
+      "tags": [
+        "donna",
+        "look-sera"
+      ],
+      "price": 259,
+      "currency": "EUR",
+      "tinta": "#D8C6A6",
+      "variants": [
+        {
+          "id": "demo-4-40",
+          "title": "40",
+          "available": true
+        },
+        {
+          "id": "demo-4-42",
+          "title": "42",
+          "available": true
+        },
+        {
+          "id": "demo-4-44",
+          "title": "44",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/giacca-sartoriale.jpg"
+    },
+    {
+      "id": "demo-5",
+      "handle": "abito-lungo-paillettes",
+      "title": "Abito lungo in paillettes",
+      "productType": "Cerimonia",
+      "tags": [
+        "cerimonia"
+      ],
+      "price": 449,
+      "currency": "EUR",
+      "tinta": "#E9DDD3",
+      "variants": [
+        {
+          "id": "demo-5-40",
+          "title": "40",
+          "available": true
+        },
+        {
+          "id": "demo-5-42",
+          "title": "42",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/abito-lungo-paillettes.jpg"
+    },
+    {
+      "id": "demo-6",
+      "handle": "abito-raso-drappeggiato",
+      "title": "Abito in raso drappeggiato",
+      "productType": "Cerimonia",
+      "tags": [
+        "cerimonia"
+      ],
+      "price": 399,
+      "currency": "EUR",
+      "tinta": "#C4B09B",
+      "variants": [
+        {
+          "id": "demo-6-40",
+          "title": "40",
+          "available": true
+        },
+        {
+          "id": "demo-6-42",
+          "title": "42",
+          "available": true
+        },
+        {
+          "id": "demo-6-44",
+          "title": "44",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/abito-raso-drappeggiato.jpg"
+    },
+    {
+      "id": "demo-7",
+      "handle": "borsa-pelle-foulard",
+      "title": "Borsa in pelle con foulard",
+      "productType": "Donna",
+      "tags": [
+        "donna",
+        "accessori",
+        "look-sera"
+      ],
+      "price": 219,
+      "currency": "EUR",
+      "tinta": "#A99482",
+      "variants": [
+        {
+          "id": "demo-7-u",
+          "title": "Unica",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/borsa-pelle-foulard.jpg"
+    },
+    {
+      "id": "demo-8",
+      "handle": "stola-pelliccia-ecologica",
+      "title": "Stola in pelliccia ecologica",
+      "productType": "Cerimonia",
+      "tags": [
+        "cerimonia",
+        "accessori"
+      ],
+      "price": 179,
+      "currency": "EUR",
+      "tinta": "#F1E7DE",
+      "variants": [
+        {
+          "id": "demo-8-u",
+          "title": "Unica",
+          "available": true
+        }
+      ],
+      "image": "assets/img/prodotti/stola-pelliccia-ecologica.jpg"
+    }
   ]
 }

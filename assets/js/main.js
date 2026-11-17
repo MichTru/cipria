@@ -282,6 +282,11 @@ if (reduced) {
   requestAnimationFrame(frameLoop);
 }
 
+/* ---------- Foto mancanti: resta il segnaposto colorato ---------- */
+const dropBroken = img => { if (img.complete && img.naturalWidth === 0) img.remove(); else img.addEventListener('error', () => img.remove(), { once: true }); };
+$$('.ph img').forEach(dropBroken);
+new MutationObserver(list => list.forEach(r => r.addedNodes.forEach(n => n.nodeType === 1 && $$('.ph img', n).forEach(dropBroken)))).observe(document.body, { childList: true, subtree: true });
+
 /* ---------- Link WhatsApp ---------- */
 $$('[data-wa]').forEach(a => { a.href = waLink(a.dataset.wa); });
 
@@ -397,7 +402,7 @@ function renderLook(products) {
     const li = document.createElement('li');
     li.className = 'look-item';
     li.innerHTML = `
-      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}"></div>
+      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}">${p.image ? `<img src="${p.image}" alt="" loading="lazy">` : ''}</div>
       <div><h3></h3><span class="price">${formatPrice(p.price, p.currency)}</span></div>
       <button class="btn" type="button">Aggiungi</button>`;
     $('h3', li).textContent = p.title;
