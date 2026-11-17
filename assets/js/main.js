@@ -19,18 +19,18 @@ const start = () => {
   if (started) return;
   started = true;
   intro?.classList.add('out');
-  root.classList.add('ready');
-  setTimeout(() => intro?.remove(), 800);
+  setTimeout(() => root.classList.add('ready'), 350);
+  setTimeout(() => intro?.remove(), 1300);
 };
 if (reduced || !intro) {
   start();
 } else {
   const stage = $('[data-intro-stage]');
-  stage.addEventListener('animationend', start, { once: true });
+  stage.addEventListener('animationend', () => setTimeout(start, 500), { once: true });
   $('[data-intro-skip]').addEventListener('click', start);
   intro.addEventListener('pointerdown', start);
   addEventListener('wheel', start, { once: true, passive: true });
-  setTimeout(start, 4600); // non restare mai bloccati sull'intro
+  setTimeout(start, 6500); // non restare mai bloccati sull'intro
 }
 
 /* ---------- Testi parola per parola ---------- */
