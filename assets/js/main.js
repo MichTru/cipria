@@ -308,7 +308,7 @@ cart.subscribe(c => {
     const li = document.createElement('li');
     li.className = 'cart-line';
     li.innerHTML = `
-      <div class="ph" style="--tinta:${l.tinta}">${l.image ? `<img src="${l.image}" alt="">` : ''}</div>
+      <div class="ph" style="--tinta:${l.tinta}">${l.image ? `<img src="${small(l.image)}" alt="" width="600" height="750">` : ''}</div>
       <div>
         <h3></h3>
         <p class="meta">Taglia ${l.size} · ${formatPrice(l.price, l.currency)}</p>
@@ -339,6 +339,12 @@ $('[data-checkout]').addEventListener('click', async () => {
   }
 });
 
+/* ---------- Foto prodotto: versione ridotta quando esiste ---------- */
+const small = src => (src && /\/prodotti\/[a-z-]+\.jpg$/.test(src) ? src.replace(/\.jpg$/, '-600.jpg') : src);
+const productImg = (p, sizes, extra = '') => (p.image
+  ? `<img src="${p.image}"${small(p.image) !== p.image ? ` srcset="${small(p.image)} 600w, ${p.image} 1200w" sizes="${sizes}"` : ''} width="1200" height="1500" alt="" loading="lazy" decoding="async"${extra}>`
+  : '');
+
 /* ---------- Schede prodotto ---------- */
 function productCard(p) {
   const el = document.createElement('article');
@@ -346,7 +352,7 @@ function productCard(p) {
   const available = p.variants.filter(v => v.available);
   el.innerHTML = `
     <div class="card-top">
-      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}">${p.image ? `<img src="${p.image}" alt="" loading="lazy" draggable="false">` : ''}</div>
+      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}">${productImg(p, '(max-width: 900px) 76vw, 380px', ' draggable="false"')}</div>
       <button class="icon-btn fav" type="button" aria-pressed="${armadio.has(p.id)}" aria-label="Aggiungi all’armadio">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
       </button>
@@ -391,7 +397,7 @@ function renderLook(products) {
     const li = document.createElement('li');
     li.className = 'look-item';
     li.innerHTML = `
-      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}">${p.image ? `<img src="${p.image}" alt="" loading="lazy">` : ''}</div>
+      <div class="ph" style="--tinta:${p.tinta || '#EAD9CF'}">${p.image ? `<img src="${small(p.image)}" alt="" width="600" height="750" loading="lazy" decoding="async">` : ''}</div>
       <div><h3></h3><span class="price">${formatPrice(p.price, p.currency)}</span></div>
       <button class="btn" type="button">Aggiungi</button>`;
     $('h3', li).textContent = p.title;
@@ -469,7 +475,7 @@ function openProduct(p, lookHandles = null) {
   $$('.pdp-slide img', pdpSlides).forEach((img, i) => { img.alt = i === 0 ? p.title : `${p.title}, dettaglio`; });
   pdpThumbs.innerHTML = VIEWS.map((v, i) => `
     <button type="button" aria-label="Foto ${i + 1}" aria-current="${i === 0}">
-      <div style="width:100%;height:100%;overflow:hidden;background:${tinta}"><div style="width:100%;height:100%;transform:scale(${v.s});transform-origin:${v.o}">${p.image ? `<img src="${p.image}" alt="">` : ''}</div></div>
+      <div style="width:100%;height:100%;overflow:hidden;background:${tinta}"><div style="width:100%;height:100%;transform:scale(${v.s});transform-origin:${v.o}">${p.image ? `<img src="${small(p.image)}" alt="" width="600" height="750">` : ''}</div></div>
     </button>`).join('');
   $$('button', pdpThumbs).forEach((b, i) => b.addEventListener('click', () => goSlide(i)));
   // taglie
@@ -501,7 +507,7 @@ function openProduct(p, lookHandles = null) {
   others.forEach(o => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.innerHTML = `<div class="ph" style="--tinta:${o.tinta || '#EAD9CF'}">${o.image ? `<img src="${o.image}" alt="">` : ''}</div><span></span><strong>${formatPrice(o.price, o.currency)}</strong>`;
+    b.innerHTML = `<div class="ph" style="--tinta:${o.tinta || '#EAD9CF'}">${o.image ? `<img src="${small(o.image)}" alt="" width="600" height="750">` : ''}</div><span></span><strong>${formatPrice(o.price, o.currency)}</strong>`;
     $('span', b).textContent = o.title;
     b.addEventListener('click', () => { openProduct(o, lookHandles); $('.pdp-info').scrollTop = 0; });
     lookList.append(b);

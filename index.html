@@ -9,11 +9,18 @@
 <meta property="og:description" content="Dove l’eleganza incontra la femminilità. Sposa, cerimonia e moda donna a Ravenna.">
 <meta name="theme-color" content="#F3EAE2">
 <link rel="icon" href="assets/img/logo-cipria.svg" type="image/svg+xml">
-<link rel="alternate icon" href="assets/img/logo-cipria.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@300..600&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..400,0..100;1,9..144,300..400,0..100&family=Manrope:wght@400..600&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..400,0..100;1,9..144,300..400,0..100&family=Manrope:wght@400..600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..400,0..100;1,9..144,300..400,0..100&family=Manrope:wght@400..600&display=swap"></noscript>
+<link rel="preload" as="image" type="image/webp" imagesrcset="assets/img/hero-sposa-1200.webp 1200w, assets/img/hero-sposa.webp 1672w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/img/logo-cipria.svg" as="image" type="image/svg+xml" fetchpriority="high">
 <link rel="stylesheet" href="assets/css/main.css">
+<link rel="modulepreload" href="assets/js/main.js">
+<link rel="modulepreload" href="assets/js/shop.js">
+<link rel="modulepreload" href="assets/js/config.js">
+<link rel="canonical" href="https://michtru.github.io/cipria/">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -37,12 +44,12 @@
 <div class="intro" data-intro aria-hidden="true">
   <div class="intro-glow"></div>
   <div class="intro-stage" data-intro-stage>
-    <div class="plane" style="--x:-30vw;--y:-16vh;--z:-1900px;--r:-6deg"><img src="assets/img/intro/donna.jpg" alt=""></div>
-    <div class="plane" style="--x:28vw;--y:12vh;--z:-1600px;--r:5deg"><img src="assets/img/intro/cerimonia.jpg" alt=""></div>
-    <div class="plane" style="--x:-24vw;--y:18vh;--z:-1250px;--r:4deg"><img src="assets/img/intro/sposa.jpg" alt=""></div>
-    <div class="plane" style="--x:26vw;--y:-20vh;--z:-900px;--r:-4deg"><img src="assets/img/intro/kamala.jpg" alt=""></div>
-    <div class="plane" style="--x:-14vw;--y:-2vh;--z:-560px;--r:3deg"><img src="assets/img/intro/petra.jpg" alt=""></div>
-    <div class="plane plane-hero"><img src="assets/img/hero-sposa.webp" alt=""></div>
+    <div class="plane" style="--x:-30vw;--y:-16vh;--z:-1900px;--r:-6deg"><img src="assets/img/intro/donna.jpg" alt="" width="520" height="650" fetchpriority="low" decoding="async"></div>
+    <div class="plane" style="--x:28vw;--y:12vh;--z:-1600px;--r:5deg"><img src="assets/img/intro/cerimonia.jpg" alt="" width="520" height="650" fetchpriority="low" decoding="async"></div>
+    <div class="plane" style="--x:-24vw;--y:18vh;--z:-1250px;--r:4deg"><img src="assets/img/intro/sposa.jpg" alt="" width="520" height="650" fetchpriority="low" decoding="async"></div>
+    <div class="plane" style="--x:26vw;--y:-20vh;--z:-900px;--r:-4deg"><img src="assets/img/intro/kamala.jpg" alt="" width="520" height="650" fetchpriority="low" decoding="async"></div>
+    <div class="plane" style="--x:-14vw;--y:-2vh;--z:-560px;--r:3deg"><img src="assets/img/intro/petra.jpg" alt="" width="520" height="650" fetchpriority="low" decoding="async"></div>
+    <div class="plane plane-hero"><img src="assets/img/hero-sposa.webp" srcset="assets/img/hero-sposa-1200.webp 1200w, assets/img/hero-sposa.webp 1672w" sizes="100vw" alt="" width="1672" height="940"></div>
   </div>
   <img class="intro-logo" src="assets/img/logo-cipria.svg" alt="">
   <button class="intro-skip" type="button" data-intro-skip>Salta</button>
@@ -82,7 +89,7 @@
   <section class="hero" id="top" data-hero>
     <div class="hero-media" data-hero-media>
       <picture>
-        <source srcset="assets/img/hero-sposa.webp" type="image/webp">
+        <source srcset="assets/img/hero-sposa-1200.webp 1200w, assets/img/hero-sposa.webp 1672w" sizes="100vw" type="image/webp">
         <img src="assets/img/hero-sposa.jpg" alt="Sposa in abito di pizzo seduta in atelier, con il logo Cipria Boutique &amp; Sposa" width="1672" height="940" fetchpriority="high">
       </picture>
     </div>
@@ -130,15 +137,15 @@
     </div>
     <div class="mondi-grid">
       <a class="mondo" href="#vetrina" data-cursor-text="Scopri" data-reveal>
-        <div class="mondo-img ph" style="--tinta:#CDB9A5"><img src="assets/img/reparti/donna.jpg" alt="Collezione donna Cipria" loading="lazy" decoding="async"></div>
+        <div class="mondo-img ph" style="--tinta:#CDB9A5"><img src="assets/img/reparti/donna.jpg" srcset="assets/img/reparti/donna-800.jpg 800w, assets/img/reparti/donna.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione donna Cipria" loading="lazy" decoding="async"></div>
         <div class="mondo-cap"><h3>Donna</h3><p>Sartoriale, pelle, raso.</p></div>
       </a>
       <a class="mondo" href="#vetrina" data-cursor-text="Scopri" data-reveal style="--d:120ms">
-        <div class="mondo-img ph" style="--tinta:#D8C6A6"><img src="assets/img/reparti/cerimonia.jpg" alt="Collezione cerimonia Cipria" loading="lazy" decoding="async"></div>
+        <div class="mondo-img ph" style="--tinta:#D8C6A6"><img src="assets/img/reparti/cerimonia.jpg" srcset="assets/img/reparti/cerimonia-800.jpg 800w, assets/img/reparti/cerimonia.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione cerimonia Cipria" loading="lazy" decoding="async"></div>
         <div class="mondo-cap"><h3>Cerimonia</h3><p>Per invitate, testimoni e mamme.</p></div>
       </a>
       <a class="mondo" href="#sposa" data-cursor-text="Scopri" data-reveal style="--d:240ms">
-        <div class="mondo-img ph" style="--tinta:#EAD9CF"><img src="assets/img/reparti/sposa.jpg" alt="Collezione sposa Cipria" loading="lazy" decoding="async"></div>
+        <div class="mondo-img ph" style="--tinta:#EAD9CF"><img src="assets/img/reparti/sposa.jpg" srcset="assets/img/reparti/sposa-800.jpg 800w, assets/img/reparti/sposa.jpg 1600w" sizes="(max-width: 900px) 78vw, 31vw" width="1600" height="2000" alt="Collezione sposa Cipria" loading="lazy" decoding="async"></div>
         <div class="mondo-cap"><h3><em>Sposa</em></h3><p>Prova su appuntamento.</p></div>
       </a>
     </div>
@@ -159,10 +166,10 @@
       </div>
       <div class="sposa-frame" data-reveal>
         <figure class="abito-slide on" data-desc="Linea pulita, scollo a cuore, gonna ampia che si muove a ogni passo.">
-          <div class="ph" style="--tinta:#FBF8F3"><img src="assets/img/sposa/kamala.jpg" alt="Abito da sposa Kamala" loading="lazy" decoding="async"></div>
+          <div class="ph" style="--tinta:#FBF8F3"><img src="assets/img/sposa/kamala.jpg" srcset="assets/img/sposa/kamala-800.jpg 800w, assets/img/sposa/kamala.jpg 1500w" sizes="(max-width: 900px) 100vw, 45vw" width="1500" height="2000" alt="Abito da sposa Kamala" loading="lazy" decoding="async"></div>
         </figure>
         <figure class="abito-slide" data-desc="Pizzo su tutta la lunghezza, maniche leggere e uno strascico che resta negli occhi.">
-          <div class="ph" style="--tinta:#F3EAE2"><img src="assets/img/sposa/petra.jpg" alt="Abito da sposa Petra" loading="lazy" decoding="async"></div>
+          <div class="ph" style="--tinta:#F3EAE2"><img src="assets/img/sposa/petra.jpg" srcset="assets/img/sposa/petra-800.jpg 800w, assets/img/sposa/petra.jpg 1500w" sizes="(max-width: 900px) 100vw, 45vw" width="1500" height="2000" alt="Abito da sposa Petra" loading="lazy" decoding="async"></div>
         </figure>
       </div>
     </div>
@@ -187,7 +194,7 @@
   <section class="look" id="look">
     <div class="wrap look-grid">
       <div class="look-media" data-reveal>
-        <div class="ph look-photo" style="--tinta:#D8C6A6"><img src="assets/img/look/look-sera.jpg" alt="Look da sera completo" loading="lazy" decoding="async"></div>
+        <div class="ph look-photo" style="--tinta:#D8C6A6"><img src="assets/img/look/look-sera.jpg" srcset="assets/img/look/look-sera-800.jpg 800w, assets/img/look/look-sera.jpg 1600w" sizes="(max-width: 900px) 100vw, 50vw" width="1600" height="2000" alt="Look da sera completo" loading="lazy" decoding="async"></div>
         <div class="hotspots" data-hotspots></div>
       </div>
       <div class="look-copy">
@@ -200,9 +207,9 @@
 
   <!-- Evento -->
   <section class="evento">
-    <div class="evento-bg" aria-hidden="true"><img src="assets/img/evento/sfilata.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="evento-bg" aria-hidden="true"><img src="assets/img/evento/sfilata-480.jpg" alt="" width="480" height="270" loading="lazy" decoding="async"></div>
     <div class="wrap evento-grid">
-      <div class="evento-media ph" style="--tinta:#CDB9A5" data-reveal><img src="assets/img/evento/sfilata.jpg" alt="Sfilata Cipria" loading="lazy" decoding="async"></div>
+      <div class="evento-media ph" style="--tinta:#CDB9A5" data-reveal><img src="assets/img/evento/sfilata.jpg" srcset="assets/img/evento/sfilata-1200.jpg 1200w, assets/img/evento/sfilata.jpg 2400w" sizes="(max-width: 900px) 100vw, 55vw" width="2400" height="1350" alt="Sfilata Cipria" loading="lazy" decoding="async"></div>
       <div class="evento-copy">
         <p class="label light">Sabato 28 novembre · ore 22</p>
         <h2 data-split>Fashion <em>Show</em></h2>
@@ -246,7 +253,7 @@
         <div><dt>Domenica</dt><dd>15–19:30</dd></div>
       </dl>
       <a class="mappa" href="https://www.google.com/maps/search/?api=1&amp;query=Via+Circonvallazione+Canale+Molinetto+37+Ravenna" data-cursor-text="Mappa" data-reveal>
-        <div class="ph" style="--tinta:#EAD9CF"><img src="assets/img/boutique/boutique.jpg" alt="La boutique Cipria a Ravenna" loading="lazy" decoding="async"></div>
+        <div class="ph" style="--tinta:#EAD9CF"><img src="assets/img/boutique/boutique.jpg" srcset="assets/img/boutique/boutique-800.jpg 800w, assets/img/boutique/boutique.jpg 1600w" sizes="(max-width: 900px) 100vw, 30vw" width="1600" height="1200" alt="La boutique Cipria a Ravenna" loading="lazy" decoding="async"></div>
         <span>Apri la mappa</span>
       </a>
     </div>
@@ -258,7 +265,7 @@
   <div class="wrap">
     <p class="footer-big" data-split>A presto, <em>in boutique.</em></p>
     <div class="footer-inner">
-      <img class="footer-logo" src="assets/img/logo-cipria-chiaro.svg" alt="Cipria Boutique &amp; Sposa" width="146" height="80">
+      <img class="footer-logo" src="assets/img/logo-cipria-chiaro.svg" alt="Cipria Boutique &amp; Sposa" width="146" height="80" loading="lazy" decoding="async">
       <nav aria-label="Informazioni legali">
         <a href="#">Spedizioni e resi</a>
         <a href="#">Termini di vendita</a>

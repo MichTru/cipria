@@ -10,6 +10,7 @@ Genera le immagini elencate qui sotto e salvale **esattamente** nei percorsi ind
 - Nessun testo, logo, scritta, marchio riconoscibile o filigrana nell'immagine.
 - Solo modelle adulte.
 - Stile comune da ripetere in ogni prompt (è già incluso nei prompt sotto): luce naturale morbida da finestra, atmosfera da atelier, palette avorio, cipria (rosa nude polveroso), champagne e beige caldo, pochi contrasti, grana fotografica leggera, eleganza discreta. Coerenti con la foto della hero (`assets/img/hero-sposa.jpg`): interno classico con boiserie chiare, tende leggere, fiori bianchi e rosa pallido.
+- Dopo aver aggiunto o sostituito le foto, lancia `python3 tools/varianti.py`: crea le versioni ridotte che il sito usa su telefono e nelle anteprime.
 - Alla fine fai un unico commit: `Foto segnaposto generate`.
 
 ## Collezioni (sezione "Tre mondi")
