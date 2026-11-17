@@ -387,10 +387,10 @@ function productCard(p) {
 
 /* ---------- Compra il look ---------- */
 const LOOK = [
-  { handle: 'giacca-sartoriale', x: 36, y: 30 },
-  { handle: 'top-raso-pizzo', x: 54, y: 40 },
+  { handle: 'giacca-sartoriale', x: 44, y: 38 },
+  { handle: 'top-raso-pizzo', x: 55, y: 32 },
   { handle: 'gonna-raso', x: 48, y: 70 },
-  { handle: 'borsa-pelle-foulard', x: 72, y: 56 }
+  { handle: 'borsa-pelle-foulard', x: 73, y: 73 }
 ];
 function renderLook(products) {
   const spots = $('[data-hotspots]');
