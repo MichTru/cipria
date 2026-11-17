@@ -22,9 +22,7 @@ const start = () => {
   root.classList.add('ready');
   setTimeout(() => intro?.remove(), 800);
 };
-let seen = false;
-try { seen = sessionStorage.getItem('cipria-intro') === '1'; sessionStorage.setItem('cipria-intro', '1'); } catch { /* storage non disponibile */ }
-if (reduced || seen || !intro) {
+if (reduced || !intro) {
   start();
 } else {
   const stage = $('[data-intro-stage]');
