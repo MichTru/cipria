@@ -244,6 +244,12 @@ p { margin: 0; }
 .mondo-body p { max-width: 26rem; font-size: 16px; color: #F1E7DE; }
 .mondo-body .btn { margin-top: 6px; }
 
+/* punti della galleria su telefono */
+.mondi-dots { display: none; justify-content: center; gap: 10px; margin-top: 18px; }
+.mondi-dots button { width: 44px; height: 24px; border: 0; padding: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.mondi-dots button::before { content: ''; width: 24px; height: 2px; border-radius: 2px; background: rgba(30, 26, 23, .2); transition: background .4s, width .4s; }
+.mondi-dots button[aria-current="true"]::before { background: var(--inchiostro); width: 36px; }
+
 /* Sposa */
 .sposa { background: var(--cipria); padding: clamp(100px, 13vw, 180px) 0; overflow: hidden; }
 .sposa-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: clamp(40px, 7vw, 120px); align-items: center; }
@@ -499,11 +505,25 @@ address { font-style: normal; font-size: 17px; line-height: 1.7; }
   .plane { width: 38vw; margin: calc(38vw * -.625) 0 0 -19vw; }
   .plane-hero { width: 100vw; margin: 0; }
   .plane-hero img { object-position: 78% 40%; }
-  .mondi-panels { flex-direction: column; height: auto; min-height: 0; gap: 8px; }
-  .mondo { flex: none; height: 84px; transition: height 1s var(--ease); }
-  .mondo.on { height: 62vh; min-height: 420px; }
-  .mondo-vert { writing-mode: horizontal-tb; transform: none; left: 22px; bottom: auto; top: 50%; translate: 0 -50%; font-size: 32px; }
-  .mondo-bg { object-position: 50% 30%; }
+  /* su telefono: schede intere da sfogliare */
+  .mondi-panels {
+    height: auto; min-height: 0; gap: 12px; max-width: none; padding: 0 var(--pad);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad); scrollbar-width: none;
+  }
+  .mondi-panels::-webkit-scrollbar { display: none; }
+  .mondo, .mondo.on { flex: 0 0 82vw; height: min(70vh, 560px); scroll-snap-align: start; transition: none; }
+  .mondo-bg, .mondo.on .mondo-bg { transform: none; filter: none; animation: none; }
+  .mondo-toggle, .mondo-vert { display: none; }
+  .mondo-body { opacity: 1; transform: none; pointer-events: auto; padding: 24px; }
+  .mondo-body h3 { font-size: 48px; }
+  .mondo-body p { font-size: 15px; }
+  .mondo-progress { opacity: 1; left: 18px; right: 18px; top: 18px; }
+  .mondo:not(.on) .mondo-progress i { transform: scaleX(0); animation: none; }
+  .mondi-dots { display: flex; }
+  .look-item { grid-template-columns: 52px 1fr auto; gap: 14px; padding: 14px 4px; }
+  .look-item .ph { width: 52px; }
+  .look-item h3 { font-size: 17px; line-height: 1.25; }
+  .look-item .btn { min-height: 44px; padding: 0 14px; font-size: 11px; letter-spacing: .14em; }
   .sposa-grid, .evento-grid, .look-grid, .boutique-grid { grid-template-columns: 1fr; }
   .sposa-frame { order: -1; max-height: 70vh; }
   .track-nav { display: none; }

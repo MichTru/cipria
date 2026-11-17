@@ -136,10 +136,20 @@ function renderMarquee(dy) {
 const mondiSec = $('[data-mondi]');
 const mondi = $$('[data-mondo]', mondiSec);
 const MONDI_DUR = 4800;
+const panels = $('.mondi-panels', mondiSec);
 let mondoAtt = 0, mondiTimer = null, mondiVisti = false;
 mondiSec.style.setProperty('--dur', `${MONDI_DUR}ms`);
-function apriMondo(i) {
+const mobileMondi = matchMedia('(max-width: 900px)');
+const dots = $$('.mondi-dots button', mondiSec);
+let scrollDaCodice = false;
+function apriMondo(i, scorri = true) {
   mondoAtt = i;
+  dots.forEach((d, n) => d.setAttribute('aria-current', n === i));
+  if (mobileMondi.matches && scorri) {
+    scrollDaCodice = true;
+    panels.scrollTo({ left: mondi[i].offsetLeft - panels.offsetLeft - parseFloat(getComputedStyle(panels).paddingLeft), behavior: reduced ? 'auto' : 'smooth' });
+    setTimeout(() => { scrollDaCodice = false; }, 700);
+  }
   mondi.forEach((m, n) => {
     const on = n === i;
     m.classList.toggle('on', on);
@@ -157,10 +167,23 @@ mondi.forEach((m, n) => {
   $('.mondo-toggle', m).addEventListener('click', () => { apriMondo(n); prossimoMondo(); });
   if (finePointer) m.addEventListener('pointerenter', () => { if (n !== mondoAtt) apriMondo(n); });
 });
-const panels = $('.mondi-panels', mondiSec);
 panels.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { mondiSec.classList.add('paused'); clearTimeout(mondiTimer); } });
 panels.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { mondiSec.classList.remove('paused'); apriMondo(mondoAtt); prossimoMondo(); } });
-new IntersectionObserver(([e]) => { mondiVisti = e.isIntersecting; if (mondiVisti) { apriMondo(mondoAtt); prossimoMondo(); } else clearTimeout(mondiTimer); }, { threshold: .3 }).observe(panels);
+new IntersectionObserver(([e]) => { mondiVisti = e.isIntersecting; if (mondiVisti) { apriMondo(mondoAtt, false); prossimoMondo(); } else clearTimeout(mondiTimer); }, { threshold: .3 }).observe(panels);
+dots.forEach((d, n) => d.addEventListener('click', () => { apriMondo(n); prossimoMondo(); }));
+// su telefono: la scheda attiva segue lo scorrimento con il dito
+let fineScroll = null;
+panels.addEventListener('scroll', () => {
+  if (!mobileMondi.matches || scrollDaCodice) return;
+  clearTimeout(mondiTimer);
+  clearTimeout(fineScroll);
+  fineScroll = setTimeout(() => {
+    const larghezza = mondi[0].getBoundingClientRect().width + 12;
+    const i = Math.max(0, Math.min(mondi.length - 1, Math.round(panels.scrollLeft / larghezza)));
+    if (i !== mondoAtt) apriMondo(i, false);
+    prossimoMondo();
+  }, 160);
+}, { passive: true });
 
 /* ---------- Sposa: abiti in dissolvenza automatica ---------- */
 const sposa = $('[data-sposa]');
