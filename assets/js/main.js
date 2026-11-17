@@ -36,7 +36,8 @@ if (reduced || !intro) {
 } else {
   document.body.classList.add('locked');
   const stage = $('[data-intro-stage]');
-  stage.addEventListener('animationend', () => setTimeout(start, 350), { once: true });
+  const riavvolgi = intro.dataset.stile === 'riavvolgi';
+  stage.addEventListener('animationend', () => setTimeout(start, riavvolgi ? 350 : 0), { once: true });
   $('[data-intro-skip]').addEventListener('click', start);
   intro.addEventListener('pointerdown', start);
   addEventListener('wheel', start, { once: true, passive: true });

@@ -85,9 +85,13 @@ p { margin: 0; }
 .intro-glow {
   position: absolute; left: 50%; top: 50%; width: 120vmax; height: 120vmax; margin: -60vmax 0 0 -60vmax; border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 248, 232, 1) 0%, rgba(240, 220, 188, .55) 28%, rgba(234, 217, 207, 0) 60%);
+  animation: glow-breath 3s ease-in-out both;
+}
+.intro[data-stile="riavvolgi"] .intro-glow {
   animation: glow-breath 3.4s ease-in-out both, glow-return 1.2s ease-out 4.4s forwards;
 }
-.intro-stage { position: absolute; inset: 0; transform-style: preserve-3d; animation: camera 5.4s cubic-bezier(.65, 0, .35, 1) .35s both; }
+.intro-stage { position: absolute; inset: 0; transform-style: preserve-3d; animation: camera-entra 2.7s cubic-bezier(.6, 0, .2, 1) .3s both; }
+.intro[data-stile="riavvolgi"] .intro-stage { animation: camera 5.4s cubic-bezier(.65, 0, .35, 1) .35s both; }
 .plane {
   position: absolute; left: 50%; top: 50%; width: min(26vw, 260px); aspect-ratio: 4 / 5; margin: calc(min(26vw, 260px) * -.625) 0 0 calc(min(26vw, 260px) * -.5);
   transform: translate3d(var(--x), var(--y), var(--z)) rotate(var(--r));
@@ -101,6 +105,9 @@ p { margin: 0; }
 .intro-logo {
   position: absolute; left: 50%; top: 50%; width: min(56vw, 300px); height: auto; transform-origin: 50% 50%; translate: -50% -50%;
   filter: drop-shadow(0 0 24px rgba(255, 240, 214, 1)) drop-shadow(0 0 60px rgba(255, 230, 196, .9));
+  animation: logo-fly 1.9s cubic-bezier(.65, 0, .25, 1) both;
+}
+.intro[data-stile="riavvolgi"] .intro-logo {
   animation: logo-fly 2.2s cubic-bezier(.65, 0, .25, 1) both, logo-return 1s var(--ease) 4.6s forwards;
 }
 .intro-skip {
@@ -108,7 +115,12 @@ p { margin: 0; }
   background: rgba(251, 248, 243, .6); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; font-weight: 500; cursor: pointer;
 }
 .intro { clip-path: inset(0 0 0 0); }
-.intro.out { clip-path: inset(0 0 100% 0); transition: clip-path 1.2s var(--ease-io); pointer-events: none; }
+.intro.out { opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+.intro[data-stile="riavvolgi"].out { opacity: 1; clip-path: inset(0 0 100% 0); transition: clip-path 1.2s var(--ease-io); }
+@keyframes camera-entra {
+  0% { transform: translate3d(0, 0, 0) rotateX(8deg) rotateZ(-3deg); }
+  100% { transform: translate3d(0, 0, 2400px) rotateX(0) rotateZ(0); }
+}
 @keyframes camera {
   0% { transform: translate3d(0, 0, 0) rotateX(8deg) rotateZ(-3deg); }
   42% { transform: translate3d(0, 0, 2400px) rotateX(0) rotateZ(0); }
