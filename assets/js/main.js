@@ -12,14 +12,28 @@ const easeInOut = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 const waLink = text => `https://wa.me/${BOUTIQUE.whatsapp}?text=${encodeURIComponent(text)}`;
 let vw = innerWidth, vh = innerHeight;
 
-/* ---------- Ingresso ---------- */
+/* ---------- Intro: volo di camera 3D ---------- */
+const intro = $('[data-intro]');
+let started = false;
 const start = () => {
-  root.classList.add('loaded');
-  setTimeout(() => root.classList.add('ready'), reduced ? 0 : 550);
+  if (started) return;
+  started = true;
+  intro?.classList.add('out');
+  root.classList.add('ready');
+  setTimeout(() => intro?.remove(), 800);
 };
-if (document.readyState === 'complete') setTimeout(start, 700);
-else addEventListener('load', () => setTimeout(start, 700));
-setTimeout(start, 2500); // non restare mai bloccati sull'ingresso
+let seen = false;
+try { seen = sessionStorage.getItem('cipria-intro') === '1'; sessionStorage.setItem('cipria-intro', '1'); } catch { /* storage non disponibile */ }
+if (reduced || seen || !intro) {
+  start();
+} else {
+  const stage = $('[data-intro-stage]');
+  stage.addEventListener('animationend', start, { once: true });
+  $('[data-intro-skip]').addEventListener('click', start);
+  intro.addEventListener('pointerdown', start);
+  addEventListener('wheel', start, { once: true, passive: true });
+  setTimeout(start, 4600); // non restare mai bloccati sull'intro
+}
 
 /* ---------- Testi parola per parola ---------- */
 function splitWords(el) {
@@ -51,14 +65,14 @@ function splitWords(el) {
 $$('[data-split]').forEach(splitWords);
 
 const manifesto = $('[data-words]');
-manifesto.innerHTML = manifesto.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
-const manifestoWords = $$('.w', manifesto);
+manifesto.innerHTML = manifesto.textContent.trim().split(/\s+/).map((w, i) => `<span class="w" style="--i:${i}">${w}</span>`).join(' ');
+manifesto.setAttribute('data-reveal-only', '');
 
 /* ---------- Comparsa allo scroll ---------- */
 const io = new IntersectionObserver(entries => {
   entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
 }, { threshold: .2, rootMargin: '0px 0px -6% 0px' });
-const observe = scope => $$('[data-split], [data-reveal]', scope).forEach(el => (reduced ? el.classList.add('in') : io.observe(el)));
+const observe = scope => $$('[data-split], [data-reveal], [data-reveal-only]', scope).forEach(el => (reduced ? el.classList.add('in') : io.observe(el)));
 observe(document);
 
 /* ---------- Header ---------- */
@@ -74,28 +88,15 @@ $$('.main-nav a').forEach(a => a.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
 
-/* ---------- Hero a tutto schermo ---------- */
+/* ---------- Hero: bagliore e parallasse leggera ---------- */
 const hero = $('[data-hero]');
-const frame = $('[data-hero-frame]');
-const media = $('[data-hero-media]');
-const heroContent = $('[data-hero-content]');
-const heroLine = $('.hero-line');
+const heroMedia = $('[data-hero-media]');
 const glow = $('[data-glow]');
 let gTarget = { x: vw * .7, y: vh * .4 }, gPos = { ...gTarget };
-hero.addEventListener('pointermove', e => { gTarget = { x: e.clientX, y: e.clientY }; }, { passive: true });
-
+if (finePointer) hero.addEventListener('pointermove', e => { gTarget = { x: e.clientX, y: e.clientY }; }, { passive: true });
 function renderHero() {
-  const p = clamp(scrollY / (hero.offsetHeight - vh));
-  const e = easeInOut(p);
-  // uscendo, la foto si stacca dai bordi e diventa un quadro
-  frame.style.setProperty('--ct', `${e * vh * .07}px`);
-  frame.style.setProperty('--cb', `${e * vh * .07}px`);
-  frame.style.setProperty('--cs', `${e * vw * .06}px`);
-  frame.style.setProperty('--rr', `${e * 28}px`);
-  media.style.setProperty('--ms', 1 + e * .12);
-  const to = clamp(p / .5);
-  heroContent.style.setProperty('--to', to);
-  heroLine.style.setProperty('--to', to);
+  if (scrollY < vh * 1.2) heroMedia.style.setProperty('--py', `${scrollY * .25}px`);
+  if (!finePointer) return;
   gPos.x = lerp(gPos.x, gTarget.x, .07);
   gPos.y = lerp(gPos.y, gTarget.y, .07);
   glow.style.setProperty('--gx', `${gPos.x}px`);
@@ -106,72 +107,58 @@ function renderHero() {
 const marquees = $$('[data-marquee]').map(row => {
   const span = row.firstElementChild;
   for (let n = 0; n < 3; n++) row.append(span.cloneNode(true));
-  return { row, dir: Number(row.dataset.marquee), x: 0, w: span.offsetWidth };
+  return { row, dir: Number(row.dataset.marquee), x: 0, w: span.offsetWidth, visible: false };
 });
+const mio = new IntersectionObserver(es => es.forEach(e => { const m = marquees.find(q => q.row === e.target); if (m) m.visible = e.isIntersecting; }));
+marquees.forEach(m => mio.observe(m.row));
 let velocity = 0;
 function renderMarquee(dy) {
   velocity = lerp(velocity, dy, .1);
   marquees.forEach(m => {
+    if (!m.visible) return;
     const dir = m.dir * (velocity < -0.5 ? -1 : 1);
-    m.x -= (0.6 + Math.abs(velocity) * .35) * dir;
+    m.x -= (0.6 + Math.min(Math.abs(velocity), 60) * .3) * dir;
     if (m.x <= -m.w) m.x += m.w;
     if (m.x > 0) m.x -= m.w;
     m.row.style.transform = `translate3d(${m.x}px,0,0)`;
   });
 }
 
-/* ---------- Manifesto ---------- */
-function renderManifesto() {
-  const r = manifesto.getBoundingClientRect();
-  const p = clamp((vh * .82 - r.top) / (r.height + vh * .25));
-  const lit = Math.round(p * manifestoWords.length);
-  manifestoWords.forEach((w, i) => w.classList.toggle('lit', i < lit));
-}
-
-/* ---------- Tre mondi orizzontale ---------- */
-const hSection = $('[data-horizontal]');
-const hTrack = $('[data-horizontal-track]');
-const hBar = $('[data-horizontal-bar]');
-const hImgs = $$('[data-parallax-x]', hTrack);
-let hDistance = 0;
-function sizeHorizontal() {
-  hDistance = Math.max(0, hTrack.scrollWidth - vw);
-  hSection.style.height = reduced ? '' : `${hDistance + vh}px`;
-}
-function renderHorizontal() {
-  if (reduced) return;
-  const r = hSection.getBoundingClientRect();
-  const p = clamp(-r.top / (hSection.offsetHeight - vh));
-  hTrack.style.transform = `translate3d(${-p * hDistance}px,0,0)`;
-  hBar.parentElement.style.setProperty('--hp', p);
-  hBar.style.transform = `scaleX(${p})`;
-  hImgs.forEach((img, i) => {
-    const local = p * (hImgs.length + 1) - (i + 1);
-    img.style.transform = `translate3d(${clamp(local, -1.5, 1.5) * -8}%,0,0)`;
+/* ---------- Sposa: abiti in dissolvenza automatica ---------- */
+const sposa = $('[data-sposa]');
+const slides = $$('.abito-slide', sposa);
+const tabs = $$('[data-abito]', sposa);
+const desc = $('[data-abito-desc]', sposa);
+const DURATA = 5200;
+let current = 0, timer = null, inView = false;
+sposa.style.setProperty('--dur', `${DURATA}ms`);
+function showAbito(i) {
+  current = i;
+  slides.forEach((s, n) => s.classList.toggle('on', n === i));
+  tabs.forEach((t, n) => {
+    t.setAttribute('aria-selected', n === i);
+    const bar = $('.bar i', t);
+    bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
   });
+  desc.classList.add('swap');
+  setTimeout(() => { desc.textContent = slides[i].dataset.desc; desc.classList.remove('swap'); }, 350);
 }
-
-/* ---------- Sposa: schede impilate ---------- */
-const stackCards = $$('[data-stack-card]');
-function renderStack() {
-  stackCards.forEach((card, i) => {
-    const next = stackCards[i + 1];
-    if (!next) return;
-    const t = clamp((vh - next.getBoundingClientRect().top) / (vh * .9));
-    card.style.transform = `scale(${1 - t * .07})`;
-    card.firstElementChild.style.setProperty('--dim', 1 - t * .1);
-  });
+function schedule() {
+  clearTimeout(timer);
+  if (!inView || reduced || sposa.classList.contains('paused')) return;
+  timer = setTimeout(() => { showAbito((current + 1) % slides.length); schedule(); }, DURATA);
 }
+tabs.forEach((t, n) => t.addEventListener('click', () => { showAbito(n); schedule(); }));
+sposa.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { sposa.classList.add('paused'); clearTimeout(timer); } });
+sposa.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { sposa.classList.remove('paused'); showAbito(current); schedule(); } });
+new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) { showAbito(current); schedule(); } else clearTimeout(timer); }, { threshold: .35 }).observe(sposa);
 
-/* ---------- Parallasse verticale ---------- */
-const parallax = $$('[data-parallax]');
-function renderParallax() {
-  parallax.forEach(el => {
-    const r = el.parentElement.getBoundingClientRect();
-    if (r.bottom < -200 || r.top > vh + 200) return;
-    const off = (r.top + r.height / 2 - vh / 2) * -.12;
-    el.style.transform = `translate3d(0,${off}px,0)`;
-  });
+/* ---------- Barra mobile ---------- */
+const mbar = $('[data-mbar]');
+const footer = $('.site-footer');
+function renderMbar() {
+  const nearEnd = footer.getBoundingClientRect().top < vh;
+  mbar.classList.toggle('on', scrollY > vh * .8 && !nearEnd);
 }
 
 /* ---------- Vetrina trascinabile con inclinazione ---------- */
@@ -246,44 +233,44 @@ function renderCursor() {
 }
 
 /* ---------- Ciclo unico di animazione ---------- */
-let prevY = scrollY;
+let prevY = scrollY, running = true;
 function frameLoop() {
+  if (!running) return;
   const y = scrollY;
   const dy = y - prevY;
   prevY = y;
   header.classList.toggle('solid', y > 40);
   if (Math.abs(y - lastY) > 6) {
-    header.classList.toggle('away', y > lastY && y > vh * 1.2 && !root.classList.contains('menu-open'));
+    header.classList.toggle('away', y > lastY && y > vh && !root.classList.contains('menu-open'));
     lastY = y;
   }
   renderHero();
   renderMarquee(dy);
-  renderManifesto();
-  renderHorizontal();
-  renderStack();
-  renderParallax();
   renderTrackSkew();
+  renderMbar();
   if (finePointer) renderCursor();
   requestAnimationFrame(frameLoop);
 }
+document.addEventListener('visibilitychange', () => {
+  running = !document.hidden && !reduced;
+  if (running) requestAnimationFrame(frameLoop);
+});
 
 function onResize() {
   vw = innerWidth; vh = innerHeight;
   marquees.forEach(m => { m.w = m.row.firstElementChild.offsetWidth; });
-  sizeHorizontal();
 }
 addEventListener('resize', onResize);
 document.fonts?.ready.then(onResize);
 onResize();
-if (reduced) {
-  renderHero(); renderManifesto();
-  manifestoWords.forEach(w => w.classList.add('lit'));
-} else {
-  requestAnimationFrame(frameLoop);
-}
+if (reduced) { renderMbar(); addEventListener('scroll', renderMbar, { passive: true }); }
+else requestAnimationFrame(frameLoop);
 
 /* ---------- Foto mancanti: resta il segnaposto colorato ---------- */
-const dropBroken = img => { if (img.complete && img.naturalWidth === 0) img.remove(); else img.addEventListener('error', () => img.remove(), { once: true }); };
+function dropBroken(img) {
+  if (img.complete && img.naturalWidth === 0) img.remove();
+  else img.addEventListener('error', () => img.remove(), { once: true });
+}
 $$('.ph img').forEach(dropBroken);
 new MutationObserver(list => list.forEach(r => r.addedNodes.forEach(n => n.nodeType === 1 && $$('.ph img', n).forEach(dropBroken)))).observe(document.body, { childList: true, subtree: true });
 
@@ -372,6 +359,10 @@ function productCard(p) {
     </div>
     <div class="card-row"><h3></h3><span class="price">${formatPrice(p.price, p.currency)}</span></div>`;
   $('h3', el).textContent = p.title;
+  $('.card-top .ph', el).addEventListener('click', () => openProduct(p));
+  $('h3', el).addEventListener('click', () => openProduct(p));
+  $('.card-top .ph', el).style.cursor = 'pointer';
+  $('h3', el).style.cursor = 'pointer';
   const fav = $('.fav', el);
   fav.addEventListener('click', () => fav.setAttribute('aria-pressed', armadio.toggle(p.id)));
   if (available.length) {
@@ -406,7 +397,12 @@ function renderLook(products) {
       <div><h3></h3><span class="price">${formatPrice(p.price, p.currency)}</span></div>
       <button class="btn" type="button">Aggiungi</button>`;
     $('h3', li).textContent = p.title;
-    $('button', li).addEventListener('click', () => { cart.add(p, variant); openCart(); });
+    $('button', li).addEventListener('click', e => { e.stopPropagation(); cart.add(p, variant); openCart(); });
+    li.tabIndex = 0;
+    li.setAttribute('role', 'button');
+    li.setAttribute('aria-label', `${p.title}, apri la scheda`);
+    li.addEventListener('click', () => openProduct(p, LOOK.map(l => l.handle)));
+    li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProduct(p, LOOK.map(l => l.handle)); } });
     list.append(li);
 
     const spot = document.createElement('button');
@@ -422,16 +418,130 @@ function renderLook(products) {
       spot.setAttribute('aria-pressed', 'true');
       li.classList.add('active');
     };
-    spot.addEventListener('click', activate);
+    spot.addEventListener('click', () => { activate(); openProduct(p, LOOK.map(l => l.handle)); });
     spot.addEventListener('pointerenter', activate);
     spots.append(spot);
   });
 }
 
+let catalog = [];
 getProducts().then(products => {
+  catalog = products;
   products.forEach(p => track.append(productCard(p)));
   renderLook(products);
 }).catch(err => console.error('Catalogo non disponibile', err));
+
+/* ---------- Scheda prodotto ---------- */
+const pdp = $('[data-pdp]');
+const pdpMain = $('[data-pdp-main]');
+const pdpSlides = $('[data-pdp-slides]');
+const pdpThumbs = $('[data-pdp-thumbs]');
+const pdpSizes = $('[data-pdp-sizes]');
+const pdpAdd = $('[data-pdp-add]');
+const pdpFav = $('[data-pdp-fav]');
+const VIEWS = [
+  { o: '50% 50%', s: 1 },
+  { o: '50% 28%', s: 1.75 },
+  { o: '50% 74%', s: 1.75 }
+];
+let pdpProduct = null, pdpVariant = null;
+
+function goSlide(i) {
+  pdpSlides.scrollTo({ left: pdpSlides.clientWidth * i, behavior: reduced ? 'auto' : 'smooth' });
+}
+function syncThumbs() {
+  const i = Math.round(pdpSlides.scrollLeft / Math.max(1, pdpSlides.clientWidth));
+  $$('button', pdpThumbs).forEach((b, n) => b.setAttribute('aria-current', n === i));
+}
+pdpSlides.addEventListener('scroll', () => requestAnimationFrame(syncThumbs), { passive: true });
+
+function openProduct(p, lookHandles = null) {
+  pdpProduct = p;
+  const tinta = p.tinta || '#EAD9CF';
+  $('[data-pdp-type]').textContent = p.productType || '';
+  $('[data-pdp-title]').textContent = p.title;
+  $('[data-pdp-price]').textContent = formatPrice(p.price, p.currency);
+  $('[data-pdp-desc]').textContent = p.description || '';
+  $('[data-pdp-details]').textContent = p.description || '';
+  pdpMain.classList.remove('zoom');
+  pdpSlides.innerHTML = VIEWS.map(v => `
+    <div class="pdp-slide" style="--tinta:${tinta}">
+      <div style="width:100%;height:100%;transform:scale(${v.s});transform-origin:${v.o}">${p.image ? `<img src="${p.image}" alt="">` : ''}</div>
+    </div>`).join('');
+  $$('.pdp-slide img', pdpSlides).forEach((img, i) => { img.alt = i === 0 ? p.title : `${p.title}, dettaglio`; });
+  pdpThumbs.innerHTML = VIEWS.map((v, i) => `
+    <button type="button" aria-label="Foto ${i + 1}" aria-current="${i === 0}">
+      <div style="width:100%;height:100%;overflow:hidden;background:${tinta}"><div style="width:100%;height:100%;transform:scale(${v.s});transform-origin:${v.o}">${p.image ? `<img src="${p.image}" alt="">` : ''}</div></div>
+    </button>`).join('');
+  $$('button', pdpThumbs).forEach((b, i) => b.addEventListener('click', () => goSlide(i)));
+  // taglie
+  pdpVariant = p.variants.find(v => v.available) || null;
+  pdpSizes.innerHTML = '';
+  p.variants.forEach(v => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = v.title;
+    b.disabled = !v.available;
+    b.setAttribute('aria-pressed', v === pdpVariant);
+    b.addEventListener('click', () => {
+      pdpVariant = v;
+      $$('button', pdpSizes).forEach(x => x.setAttribute('aria-pressed', x === b));
+      updateTry();
+    });
+    pdpSizes.append(b);
+  });
+  pdpAdd.disabled = !pdpVariant;
+  pdpAdd.textContent = pdpVariant ? 'Aggiungi alla borsa' : 'Non disponibile online';
+  pdpFav.setAttribute('aria-pressed', armadio.has(p.id));
+  updateTry();
+  // completa il look
+  const others = (lookHandles || []).filter(h => h !== p.handle).map(h => catalog.find(c => c.handle === h)).filter(Boolean);
+  const lookBox = $('[data-pdp-look]');
+  const lookList = $('[data-pdp-look-list]');
+  lookBox.hidden = !others.length;
+  lookList.innerHTML = '';
+  others.forEach(o => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<div class="ph" style="--tinta:${o.tinta || '#EAD9CF'}">${o.image ? `<img src="${o.image}" alt="">` : ''}</div><span></span><strong>${formatPrice(o.price, o.currency)}</strong>`;
+    $('span', b).textContent = o.title;
+    b.addEventListener('click', () => { openProduct(o, lookHandles); $('.pdp-info').scrollTop = 0; });
+    lookList.append(b);
+  });
+  $$('img', pdp).forEach(dropBroken);
+  if (!pdp.open) {
+    pdp.showModal();
+    document.body.classList.add('locked');
+  }
+  requestAnimationFrame(() => { pdpSlides.scrollLeft = 0; syncThumbs(); });
+}
+function updateTry() {
+  const size = pdpVariant ? ` in taglia ${pdpVariant.title}` : '';
+  $('[data-pdp-try]').href = waLink(`Ciao! Vorrei provare in boutique "${pdpProduct.title}"${size}.`);
+}
+pdpAdd.addEventListener('click', () => {
+  if (!pdpVariant) return;
+  cart.add(pdpProduct, pdpVariant);
+  pdp.close();
+  openCart();
+});
+pdpFav.addEventListener('click', () => pdpFav.setAttribute('aria-pressed', armadio.toggle(pdpProduct.id)));
+$('[data-pdp-close]').addEventListener('click', () => pdp.close());
+pdp.addEventListener('click', e => { if (e.target === pdp) pdp.close(); });
+pdp.addEventListener('close', () => document.body.classList.remove('locked'));
+// zoom con il mouse
+if (finePointer) {
+  pdpMain.addEventListener('click', () => pdpMain.classList.toggle('zoom'));
+  pdpMain.addEventListener('pointermove', e => {
+    if (!pdpMain.classList.contains('zoom')) return;
+    const r = pdpMain.getBoundingClientRect();
+    $$('.pdp-slide img', pdpMain).forEach(img => {
+      img.style.setProperty('--zx', `${((e.clientX - r.left) / r.width) * 100}%`);
+      img.style.setProperty('--zy', `${((e.clientY - r.top) / r.height) * 100}%`);
+    });
+  });
+  pdpMain.addEventListener('pointerleave', () => pdpMain.classList.remove('zoom'));
+}
 
 /* ---------- Prenotazione prova ---------- */
 const booking = $('[data-booking]');

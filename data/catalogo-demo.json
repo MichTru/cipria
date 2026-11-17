@@ -29,7 +29,8 @@
           "available": false
         }
       ],
-      "image": "assets/img/prodotti/giacca-pelle-intrecciata.jpg"
+      "image": "assets/img/prodotti/giacca-pelle-intrecciata.jpg",
+      "description": "Pelle con lavorazione intrecciata, collo classico e zip centrale. Un capospalla deciso che alza qualsiasi look, dal jeans al raso."
     },
     {
       "id": "demo-2",
@@ -55,7 +56,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/top-raso-pizzo.jpg"
+      "image": "assets/img/prodotti/top-raso-pizzo.jpg",
+      "description": "Raso dalla caduta morbida con bordo in pizzo e spalline sottili. Perfetto sotto una giacca o da solo nelle sere d’estate."
     },
     {
       "id": "demo-3",
@@ -86,7 +88,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/gonna-raso.jpg"
+      "image": "assets/img/prodotti/gonna-raso.jpg",
+      "description": "Gonna midi in raso dalla linea fluida, che si muove a ogni passo. Elegante con un tacco, sorprendente con una sneaker."
     },
     {
       "id": "demo-4",
@@ -117,7 +120,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/giacca-sartoriale.jpg"
+      "image": "assets/img/prodotti/giacca-sartoriale.jpg",
+      "description": "Taglio sartoriale monopetto con revers a lancia. Struttura leggera, linea pulita: il capo che risolve ogni occasione."
     },
     {
       "id": "demo-5",
@@ -142,7 +146,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/abito-lungo-paillettes.jpg"
+      "image": "assets/img/prodotti/abito-lungo-paillettes.jpg",
+      "description": "Abito lungo interamente ricamato di paillettes, con silhouette a sirena. Luce morbida per cerimonie e serate importanti."
     },
     {
       "id": "demo-6",
@@ -172,7 +177,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/abito-raso-drappeggiato.jpg"
+      "image": "assets/img/prodotti/abito-raso-drappeggiato.jpg",
+      "description": "Raso drappeggiato in vita e strascico leggero. Un abito da cerimonia che valorizza la figura senza costringerla."
     },
     {
       "id": "demo-7",
@@ -194,7 +200,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/borsa-pelle-foulard.jpg"
+      "image": "assets/img/prodotti/borsa-pelle-foulard.jpg",
+      "description": "Borsa a mano in pelle con chiusura dorata e foulard in seta annodato al manico. Il dettaglio che completa il look."
     },
     {
       "id": "demo-8",
@@ -215,7 +222,8 @@
           "available": true
         }
       ],
-      "image": "assets/img/prodotti/stola-pelliccia-ecologica.jpg"
+      "image": "assets/img/prodotti/stola-pelliccia-ecologica.jpg",
+      "description": "Stola in pelliccia ecologica morbida e avvolgente. La scelta giusta per cerimonie in autunno e inverno."
     }
   ]
 }

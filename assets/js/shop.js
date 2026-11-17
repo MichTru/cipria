@@ -24,7 +24,7 @@ const PRODUCTS_QUERY = `
   query Prodotti($first: Int!, $query: String) {
     products(first: $first, query: $query, sortKey: CREATED_AT, reverse: true) {
       nodes {
-        id handle title productType tags
+        id handle title productType tags description
         priceRange { minVariantPrice { amount currencyCode } }
         featuredImage { url(transform: { maxWidth: 1200 }) altText }
         variants(first: 20) { nodes { id title availableForSale } }
@@ -39,6 +39,7 @@ function normalize(p) {
     title: p.title,
     productType: p.productType,
     tags: p.tags,
+    description: p.description,
     price: Number(p.priceRange.minVariantPrice.amount),
     currency: p.priceRange.minVariantPrice.currencyCode,
     image: p.featuredImage?.url || null,
