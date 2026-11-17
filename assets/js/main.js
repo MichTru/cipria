@@ -26,11 +26,11 @@ if (reduced || !intro) {
   start();
 } else {
   const stage = $('[data-intro-stage]');
-  stage.addEventListener('animationend', () => setTimeout(start, 500), { once: true });
+  stage.addEventListener('animationend', () => setTimeout(start, 350), { once: true });
   $('[data-intro-skip]').addEventListener('click', start);
   intro.addEventListener('pointerdown', start);
   addEventListener('wheel', start, { once: true, passive: true });
-  setTimeout(start, 6500); // non restare mai bloccati sull'intro
+  setTimeout(start, 7500); // non restare mai bloccati sull'intro
 }
 
 /* ---------- Testi parola per parola ---------- */
